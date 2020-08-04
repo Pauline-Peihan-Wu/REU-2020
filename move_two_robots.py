@@ -76,7 +76,10 @@ class GoToPose():
 
 if __name__ == '__main__':
     try:
-        rospy.init_node('nav_test', anonymous=False)
+        ## rospy.init_node('nav_test', anonymous=False)
+	rospy.init_node('robot', anonymous=True)
+	pub = rospy.Publisher('my_position', Pose, queue_size=1)
+	rate = rospy.Rate(1) # 1hz
         navigator = GoToPose()
 
         # Customize the following values so they are appropriate for your location (x: 1.22, y: 2.56)
@@ -91,8 +94,12 @@ if __name__ == '__main__':
         else:
             rospy.loginfo("The base failed to reach the desired pose")
 
+	while not rospy.is_shutdown():
+	    pub.publish(Pose())
+	    rate.sleep()
+
         # Sleep to give the last log messages time to be sent
-        rospy.sleep(1)
+        ## rospy.sleep(1)
 
     except rospy.ROSInterruptException:
         rospy.loginfo("Ctrl-C caught. Quitting")
